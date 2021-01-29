@@ -14,6 +14,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass=InvoiceRepository::class)
  * @ApiResource(
+ *  subresourceOperations={
+ *      "api_customers_invoices_get_subresource"={
+ *         "normalization_context"={"groups"={"invoices_subresource"}}        
+ *  }
+ * },
  *  normalizationContext={"groups"={"invoices_read"}}
  * ) 
  * @ApiFilter(OrderFilter::class)
@@ -29,13 +34,13 @@ class Invoice
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * 
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="float")
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $amount;
 
@@ -47,7 +52,7 @@ class Invoice
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $status;
 
@@ -60,13 +65,13 @@ class Invoice
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"invoices_read", "customers_read"})
+     * @Groups({"invoices_read", "customers_read", "invoices_subresource"})
      */
     private $chrono;
 
     /**
      * Permet de recuperer le User à qui appartient finalement la facture
-     * @Groups({"invoices_read"})
+     * @Groups({"invoices_read", "invoices_subresource"})
      *
      * @return User
      */
