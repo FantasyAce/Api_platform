@@ -9,9 +9,13 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 
 /**
  * @ORM\Entity(repositoryClass=CustomerRepository::class)
@@ -42,6 +46,8 @@ class Customer
      * @ORM\Column(type="string", length=255)
      * 
      * @Groups({"customers_read", "invoices_read"})
+     * @Assert\NotBlank(message="Le prénom du Customer est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le prénom doit faire entre 3-255 caractères", max=255, maxMessage="Le prénom doit faire entre 3-255 caractères")
      */
     private $firstName;
 
@@ -49,12 +55,18 @@ class Customer
      * @ORM\Column(type="string", length=255)
      * 
      * @Groups({"customers_read", "invoices_read"})
+     * 
+     * @Assert\NotBlank(message="Le nom de famille du Customer est obligatoire")
+     * @Assert\Length(min=3, minMessage="Le nom de famille doit faire entre 3-255 caractères", max=255, maxMessage="Le nom de famille doit faire entre 3-255 caractères")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"customers_read", "invoices_read"})
+     * 
+     * @Assert\NotBlank(message="L'adresse email du Customer est obligatoire")
+     * @Assert\Email(message="Le format de l'adresse email doit être vailde")
      */
     private $email;
 
@@ -74,6 +86,7 @@ class Customer
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="customers")
      * @Groups({"customers_read"})
+     * @Assert\NotBlank(message="L'utilisateur est obligatoire")
      */
     private $user;
 
@@ -86,23 +99,23 @@ class Customer
      *@Groups({"customers_read"})
      * @return float
      */
-    public function getTotalAmount(): float{
-        return array_reduce($this->invoices->toArray(), function($total, $invoice) {
-            return $total + $invoice->getAmount();
-        },);
-    }
+    // public function getTotalAmount(): float{
+    //     return array_reduce($this->invoices->toArray(), function($total, $invoice) {
+    //         return $total + $invoice->getAmount();
+    //     },);
+    // }
     /**
      * Recuperer le montant total non payé (montant total hors factures payées ou annulées)
      * @Groups({"customers_read"})
      *
      * @return float
      */
-    public function getUnpaidAmount(): float{
-        return array_reduce($this->invoices->toArray(), function($total, $invoice){
-            return $total + ($invoice->getStatus() === "PAID" || $invoice === "CANCELLED" ? 0 : 
-            $invoice->getAmount());
-        },);
-    }
+    // public function getUnpaidAmount(): float{
+    //     return array_reduce($this->invoices->toArray(), function($total, $invoice){
+    //         return $total + ($invoice->getStatus() === "PAID" || $invoice === "CANCELLED" ? 0 : 
+    //         $invoice->getAmount());
+    //     },);
+    // }
 
     public function getId(): ?int
     {
