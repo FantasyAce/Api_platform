@@ -119,7 +119,7 @@ class Customer
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id;      
     }
 
     public function getFirstName(): ?string
