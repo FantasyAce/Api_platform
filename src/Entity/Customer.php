@@ -53,9 +53,7 @@ class Customer
 
     /**
      * @ORM\Column(type="string", length=255)
-     * 
      * @Groups({"customers_read", "invoices_read"})
-     * 
      * @Assert\NotBlank(message="Le nom de famille du Customer est obligatoire")
      * @Assert\Length(min=3, minMessage="Le nom de famille doit faire entre 3-255 caractères", max=255, maxMessage="Le nom de famille doit faire entre 3-255 caractères")
      */
